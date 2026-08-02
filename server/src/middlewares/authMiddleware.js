@@ -1,9 +1,9 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
- export const protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   try {
-    const token;
+    let token;
 
     if (
       req.headers.authorization &&
@@ -35,6 +35,8 @@ import jwt from "jsonwebtoken";
         message: "Your account has been blocked by Admin",
       });
     }
+
+    console.log("decoded: ", decoded);
 
     req.user = user;
     next();

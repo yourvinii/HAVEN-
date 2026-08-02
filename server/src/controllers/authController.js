@@ -9,11 +9,13 @@ import sendEmail from "../utils/sendEmail.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "Name, Email, and Password are required.",
       });
     }
+
     if (!["buyer", "seller"].includes(role)) {
       return res.status(400).json({
         message: "Choose either buyer or seller role",
@@ -58,6 +60,7 @@ export const register = async (req, res) => {
     return res.status(201).json({
       message:
         "User registerd. Please check your email for the verification code",
+      user: { email: user.email, name: user.name, role: user.role },
     });
   } catch (error) {
     return res.status(500).json({
@@ -116,5 +119,96 @@ export const verifyEmail = async (req, res) => {
 // Login
 export const login = async (req, res) => {
   try {
-  } catch (error) {}
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are requried!",
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found!",
+      });
+    }
+
+    if (!user.isVerified) {
+      return res.status(401).json({
+        success: false,
+        message: "Your account isn't verified!, Please contact support.",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password",
+      });
+    }
+
+    const userData = user.toObject();
+
+    delete userData.password;
+
+    if (user.isBlocked) {
+      return res.status(401).json({
+        success: false,
+        message: "Your account has been blocked by Admin, Contact Support!",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      user: userData,
+      token,
+    });
+  } catch (loginError) {
+    return res.status(500).json({
+      success: false,
+      message: loginError,
+    });
+  }
+};
+
+// Get Me
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
 };
