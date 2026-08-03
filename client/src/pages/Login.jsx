@@ -9,8 +9,10 @@ const Login = () => {
     password: "",
   });
 
-  const handleInput = ()=>{
-    setUser
+  const handleInput = (event)=>{
+    setUser((curr)=>{
+      return 
+    })
   }
 
   return (
