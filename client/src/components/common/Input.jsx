@@ -1,10 +1,22 @@
 import React from "react";
 
-const Input = ({ label, type, placeholder, name, value, onChange }) => {
+const Input = ({
+  label,
+  type,
+  placeholder,
+  name,
+  value,
+  onChange,
+  htmlFor,
+  id,
+}) => {
   return (
     <div>
-      <label className="font-semibold">{label}</label>
+      <label htmlFor={htmlFor} className="font-semibold">
+        {label}
+      </label>
       <input
+        id={id}
         type={type}
         onChange={onChange}
         name={name}
