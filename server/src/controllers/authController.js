@@ -133,4 +133,69 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-export { registerUser, verifyOTP };
+const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    //1 check email
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    // 2. Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 3. check if already verified
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is already verified",
+      });
+    }
+
+    // 4. Generate new 6 digit OTP
+    const verificationOTP = Math.floor(
+      10000 + Math.random() * 900000,
+    ).toString();
+
+    // 5. OTP expiry - 10 minutes
+    const verificationOTPExpire = new Date(Date.now() + 10 * 60 * 1000);
+
+    // 6. update user
+    user.verificationOTP = verificationOTP;
+    user.verificationOTPExpire = verificationOTPExpire;
+
+    await user.save();
+
+    // 7. Send new OTP email
+    await sendEmail({
+      email,
+      subject: "HAVEN New Verification OTP",
+      message: `Your new HAVEN verification OTP is ${verificationOTP}. It s valid for 10 minutes`,
+    });
+
+    // 8. Response
+    return res.status(200).json({
+      success: true,
+      message: "New OTP sent successfully",
+    });
+  } catch (error) {
+    console.log("Resend OTP error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export { registerUser, verifyOTP, resendOTP };
