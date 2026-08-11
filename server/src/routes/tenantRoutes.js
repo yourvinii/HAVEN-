@@ -1,7 +1,10 @@
 import express from "express";
 import protect from "../middlewares/authMiddleware.js";
 import authorizeRole from "../middlewares/roleMiddleware.js";
-import { getTenantProfile } from "../controllers/tenantController.js";
+import {
+  getTenantProfile,
+  updateTenantProfile,
+} from "../controllers/tenantController.js";
 
 const tenantRouter = express.Router();
 
@@ -16,5 +19,9 @@ tenantRouter.get("/dashboard", protect, authorizeRole("tenant"), (req, res) => {
 tenantRouter
   .route("/profile")
   .get(protect, authorizeRole("tenant"), getTenantProfile);
+
+tenantRouter
+  .route("/profile")
+  .patch(protect, authorizeRole("tenant"), updateTenantProfile);
 
 export default tenantRouter;
