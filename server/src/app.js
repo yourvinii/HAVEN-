@@ -3,6 +3,7 @@ import cors from "cors";
 
 // routes
 import authRoutes from "./routes/authRoutes.js";
+import tenantRouter from "./routes/tenantRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -14,5 +15,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/tenant", tenantRouter);
 
 export default app;
