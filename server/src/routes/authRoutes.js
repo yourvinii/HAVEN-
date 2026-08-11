@@ -23,4 +23,39 @@ router.route("/me").get(protect, (req, res) => {
   });
 });
 
+// Temporary role test route
+import authorizeRole from "../middlewares/roleMiddleware.js";
+// tenant
+router
+  .route("/tenant-test")
+  .get(protect, authorizeRole("tenant"), (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: "Tenant access guranted",
+      user: req.user,
+    });
+  });
+
+// owner
+router
+  .route("/owner-test")
+  .get(protect, authorizeRole("owner"), (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: "owner access guranted",
+      user: req.user,
+    });
+  });
+
+// admin
+router
+  .route("/admin-test")
+  .get(protect, authorizeRole("admin"), (req, res) => {
+    res.status(200).json({
+      success: true,
+      message: "admin access guranted",
+      user: req.user,
+    });
+  });
+
 export default router;
