@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/UserModel.js";
 import sendEmail from "../utils/sendEmail.js";
+import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
   try {
@@ -198,4 +199,85 @@ const resendOTP = async (req, res) => {
   }
 };
 
-export { registerUser, verifyOTP, resendOTP };
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    //1. Check required fields
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required.",
+      });
+    }
+
+    //2. Find User
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // 3. Check email verification
+    if (!user.isVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "Please verify your email before login.",
+      });
+    }
+    // 4. Check if user is blocked
+    if (user.isBlocked) {
+      return res.status(403).json({
+        success: false,
+        message: "Your account has been blocked",
+      });
+    }
+
+    //5. Compare password
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // Create JWT
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      },
+    );
+
+    // 7. Send response
+    return res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.log("Login Error: ", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
+
+export { registerUser, verifyOTP, resendOTP, loginUser };
