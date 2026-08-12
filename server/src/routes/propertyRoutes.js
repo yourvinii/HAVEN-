@@ -3,6 +3,7 @@ import protect from "../middlewares/authMiddleware.js";
 import authorizeRole from "../middlewares/roleMiddleware.js";
 import {
   createProperty,
+  deleteProperty,
   getAllProperties,
   getPropertyById,
   updateProperty,
@@ -16,4 +17,7 @@ propertyRouter.route("/:id").get(protect, getPropertyById);
 propertyRouter
   .route("/:id")
   .patch(protect, authorizeRole("owner"), updateProperty);
+propertyRouter
+  .route("/:id")
+  .delete(protect, authorizeRole("owner"), deleteProperty);
 export default propertyRouter;
