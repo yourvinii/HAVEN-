@@ -89,4 +89,36 @@ const getMyWishlist = async (req, res) => {
   }
 };
 
-export { addToWishlist, getMyWishlist };
+const removeFromWishlist = async (req, res) => {
+  try {
+    const { propertyId } = req.params;
+    const userId = req.user._id;
+
+    const wishlist = await Wishlist.findOne({
+      user: userId,
+      property: propertyId,
+    });
+
+    if (!wishlist) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found in wishlist",
+      });
+    }
+
+    await Wishlist.findByIdAndDelete(wishlist._id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Property removed from wishlist",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to remove property from wishlist",
+      error: error.message,
+    });
+  }
+};
+
+export { addToWishlist, getMyWishlist , removeFromWishlist};
