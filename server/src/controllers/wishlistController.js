@@ -57,4 +57,36 @@ const addToWishlist = async (req, res) => {
   }
 };
 
-export { addToWishlist };
+
+const getMyWishlist = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const wishlist = await Wishlist.find({
+      user: userId,
+    })
+      .populate({
+        path: "property",
+        populate: {
+          path: "owner",
+          select: "name email phone",
+        },
+      })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Wishlist fetched successfully",
+      count: wishlist.length,
+      wishlist,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch wishlist",
+      error: error.message,
+    });
+  }
+};
+
+export { addToWishlist, getMyWishlist };
