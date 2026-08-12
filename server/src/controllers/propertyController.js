@@ -47,7 +47,6 @@ const createProperty = async (req, res) => {
   }
 };
 
-
 const getAllProperties = async (req, res) => {
   try {
     const properties = await Property.find({
@@ -71,4 +70,34 @@ const getAllProperties = async (req, res) => {
   }
 };
 
-export { createProperty , getAllProperties};
+const getPropertyById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const property = await Property.findById(id).populate(
+      "owner",
+      "name email phone",
+    );
+
+    if (!property) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Property fetched successfully",
+      property,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch property",
+      error: error.message,
+    });
+  }
+};
+
+export { createProperty, getAllProperties, getPropertyById };
