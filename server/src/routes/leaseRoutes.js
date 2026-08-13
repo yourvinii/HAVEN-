@@ -8,7 +8,7 @@ const leaseRouter = express.Router();
 
 leaseRouter.route("/my").get(protect, authorizeRole("tenant"), getMyLeases);
 
-leaseRouter.route("/my").get(protect, authorizeRole("owner"), getOwnerLeases);
+leaseRouter.route("/owner").get(protect, authorizeRole("owner"), getOwnerLeases);
 
 leaseRouter
   .route("/:applicationId")
