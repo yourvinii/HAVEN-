@@ -69,7 +69,6 @@ const createApplication = async (req, res) => {
   }
 };
 
-
 const getMyApplications = async (req, res) => {
   try {
     const tenantId = req.user._id;
@@ -96,4 +95,30 @@ const getMyApplications = async (req, res) => {
   }
 };
 
-export { createApplication, getMyApplications };
+const getOwnerApplications = async (req, res) => {
+  try {
+    const ownerId = req.user._id;
+
+    const applications = await Application.find({
+      owner: ownerId,
+    })
+      .populate("tenant", "name email phone")
+      .populate("property", "title rent city images isAvailable")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Owner applications fetched successfully",
+      count: applications.length,
+      applications,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch owner applications",
+      error: error.message,
+    });
+  }
+};
+
+export { createApplication, getMyApplications, getOwnerApplications };
