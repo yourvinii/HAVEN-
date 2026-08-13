@@ -8,6 +8,7 @@ import ownerRouter from "./routes/ownerRoutes.js";
 import adminRouter from "./routes/adminRoutes.js";
 import propertyRouter from "./routes/propertyRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
+import inquireRouter from "./routes/inquiryRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -24,5 +25,6 @@ app.use("/api/owner", ownerRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/properties", propertyRouter);
 app.use("/api/wishlist", wishlistRouter);
+app.use("/api/inquires", inquireRouter);
 
 export default app;
