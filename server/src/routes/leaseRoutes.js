@@ -1,4 +1,4 @@
-import { createLease, getMyLeases } from "../controllers/leaseController.js";
+import { createLease, getMyLeases, getOwnerLeases } from "../controllers/leaseController.js";
 import protect from "../middlewares/authMiddleware.js";
 import authorizeRole from "../middlewares/roleMiddleware.js";
 
@@ -8,7 +8,7 @@ const leaseRouter = express.Router();
 
 leaseRouter.route("/my").get(protect, authorizeRole("tenant"), getMyLeases);
 
-leaseRouter.report("/my").get(protect, authorizeRole("owner"), getOwnerLeases);
+leaseRouter.route("/my").get(protect, authorizeRole("owner"), getOwnerLeases);
 
 leaseRouter
   .route("/:applicationId")
