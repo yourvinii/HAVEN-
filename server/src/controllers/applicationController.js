@@ -69,4 +69,31 @@ const createApplication = async (req, res) => {
   }
 };
 
-export { createApplication };
+
+const getMyApplications = async (req, res) => {
+  try {
+    const tenantId = req.user._id;
+
+    const applications = await Application.find({
+      tenant: tenantId,
+    })
+      .populate("property", "title rent city images isAvailable")
+      .populate("owner", "name email phone")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Applications fetched successfully",
+      count: applications.length,
+      applications,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch applications",
+      error: error.message,
+    });
+  }
+};
+
+export { createApplication, getMyApplications };
