@@ -8,6 +8,8 @@ const leaseRouter = express.Router();
 
 leaseRouter.route("/my").get(protect, authorizeRole("tenant"), getMyLeases);
 
+leaseRouter.report("/my").get(protect, authorizeRole("owner"), getOwnerLeases);
+
 leaseRouter
   .route("/:applicationId")
   .post(protect, authorizeRole("owner"), createLease);
