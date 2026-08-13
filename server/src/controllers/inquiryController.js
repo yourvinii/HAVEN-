@@ -64,4 +64,31 @@ const createInquiry = async (req, res) => {
   }
 };
 
-export { createInquiry };
+
+const getMyInquiries = async (req, res) => {
+  try {
+    const tenantId = req.user._id;
+
+    const inquiries = await Inquiry.find({
+      tenant: tenantId,
+    })
+      .populate("property", "title rent city images isAvailable")
+      .populate("owner", "name email phone")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Inquiries fetched successfully",
+      count: inquiries.length,
+      inquiries,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch inquiries",
+      error: error.message,
+    });
+  }
+};
+
+export { createInquiry, getMyInquiries };
