@@ -9,6 +9,7 @@ import adminRouter from "./routes/adminRoutes.js";
 import propertyRouter from "./routes/propertyRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
 import inquireRouter from "./routes/inquiryRoutes.js";
+import applicationRouter from "./routes/applicationRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -26,5 +27,6 @@ app.use("/api/admin", adminRouter);
 app.use("/api/properties", propertyRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/inquires", inquireRouter);
+app.use("/api/applications", applicationRouter);
 
 export default app;
