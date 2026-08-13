@@ -4,17 +4,17 @@ import Application from "../models/ApplicationModel.js";
 const createLease = async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const {
-      startDate,
-      endDate,
-      rent,
-      securityDeposit,
-    } = req.body;
+    const { startDate, endDate, rent, securityDeposit } = req.body;
 
     const ownerId = req.user._id;
 
     // 1. Validate required fields
-    if (!startDate || !endDate || rent === undefined || securityDeposit === undefined) {
+    if (
+      !startDate ||
+      !endDate ||
+      rent === undefined ||
+      securityDeposit === undefined
+    ) {
       return res.status(400).json({
         success: false,
         message: "All lease details are required",
@@ -53,7 +53,8 @@ const createLease = async (req, res) => {
     if (application.owner.toString() !== ownerId.toString()) {
       return res.status(403).json({
         success: false,
-        message: "You are not authorized to create a lease for this application",
+        message:
+          "You are not authorized to create a lease for this application",
       });
     }
 
@@ -103,7 +104,6 @@ const createLease = async (req, res) => {
     });
   }
 };
-
 
 const getMyLeases = async (req, res) => {
   try {
@@ -159,4 +159,56 @@ const getOwnerLeases = async (req, res) => {
   }
 };
 
-export { createLease, getMyLeases , getOwnerLeases};
+const updateLeaseStatus = async (req, res) => {
+  try {
+    const { leaseId } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = ["active", "expired", "terminated"];
+
+    // 1. Validate status
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid lease status",
+      });
+    }
+
+    // 2. Find lease
+    const lease = await Lease.findById(leaseId);
+
+    if (!lease) {
+      return res.status(404).json({
+        success: false,
+        message: "Lease not found",
+      });
+    }
+
+    // 3. Only lease owner can update status
+    if (lease.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this lease",
+      });
+    }
+
+    // 4. Update status
+    lease.status = status;
+
+    await lease.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Lease status updated successfully",
+      lease,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update lease status",
+      error: error.message,
+    });
+  }
+};
+
+export { createLease, getMyLeases, getOwnerLeases, updateLeaseStatus };
