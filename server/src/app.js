@@ -10,6 +10,7 @@ import propertyRouter from "./routes/propertyRoutes.js";
 import wishlistRouter from "./routes/wishlistRoutes.js";
 import inquireRouter from "./routes/inquiryRoutes.js";
 import applicationRouter from "./routes/applicationRoutes.js";
+import leaseRouter from "./routes/leaseRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -28,5 +29,6 @@ app.use("/api/properties", propertyRouter);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/inquires", inquireRouter);
 app.use("/api/applications", applicationRouter);
+app.use("/api/leases", leaseRouter);
 
 export default app;
