@@ -118,4 +118,56 @@ const getOwnerInquiries = async (req, res) => {
   }
 };
 
-export { createInquiry, getMyInquiries, getOwnerInquiries };
+const updateInquiryStatus = async (req, res) => {
+  try {
+    const { inquiryId } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = ["pending", "responded", "closed"];
+
+    // 1. Validate status
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid inquiry status",
+      });
+    }
+
+    // 2. Find inquiry
+    const inquiry = await Inquiry.findById(inquiryId);
+
+    if (!inquiry) {
+      return res.status(404).json({
+        success: false,
+        message: "Inquiry not found",
+      });
+    }
+
+    // 3. Only the inquiry's owner can update it
+    if (inquiry.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this inquiry",
+      });
+    }
+
+    // 4. Update status
+    inquiry.status = status;
+
+    await inquiry.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Inquiry status updated successfully",
+      inquiry,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update inquiry status",
+      error: error.message,
+    });
+  }
+};
+
+export { createInquiry, getMyInquiries, getOwnerInquiries, updateInquiryStatus };
