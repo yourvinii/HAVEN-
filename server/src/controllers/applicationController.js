@@ -121,4 +121,57 @@ const getOwnerApplications = async (req, res) => {
   }
 };
 
-export { createApplication, getMyApplications, getOwnerApplications };
+
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { applicationId } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = ["pending", "approved", "rejected"];
+
+    // 1. Validate status
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application status",
+      });
+    }
+
+    // 2. Find application
+    const application = await Application.findById(applicationId);
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
+    }
+
+    // 3. Only the application's owner can update it
+    if (application.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this application",
+      });
+    }
+
+    // 4. Update status
+    application.status = status;
+
+    await application.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Application status updated successfully",
+      application,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update application status",
+      error: error.message,
+    });
+  }
+};
+
+export { createApplication, getMyApplications, getOwnerApplications, updateApplicationStatus };
