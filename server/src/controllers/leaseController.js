@@ -104,4 +104,32 @@ const createLease = async (req, res) => {
   }
 };
 
-export { createLease };
+
+const getMyLeases = async (req, res) => {
+  try {
+    const tenantId = req.user._id;
+
+    const leases = await Lease.find({
+      tenant: tenantId,
+    })
+      .populate("property", "title rent city images isAvailable")
+      .populate("owner", "name email phone")
+      .populate("application", "status")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Leases fetched successfully",
+      count: leases.length,
+      leases,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch leases",
+      error: error.message,
+    });
+  }
+};
+
+export { createLease, getMyLeases };
