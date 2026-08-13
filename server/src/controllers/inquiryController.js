@@ -91,4 +91,31 @@ const getMyInquiries = async (req, res) => {
   }
 };
 
-export { createInquiry, getMyInquiries };
+
+const getOwnerInquiries = async (req, res) => {
+  try {
+    const ownerId = req.user._id;
+
+    const inquiries = await Inquiry.find({
+      owner: ownerId,
+    })
+      .populate("tenant", "name email phone")
+      .populate("property", "title rent city images isAvailable")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Owner inquiries fetched successfully",
+      count: inquiries.length,
+      inquiries,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch owner inquiries",
+      error: error.message,
+    });
+  }
+};
+
+export { createInquiry, getMyInquiries, getOwnerInquiries };
