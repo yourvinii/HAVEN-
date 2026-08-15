@@ -85,4 +85,4 @@ const createPayment = async (req, res) => {
   }
 };
 
-export { createPayment };
+export { createPayment }
