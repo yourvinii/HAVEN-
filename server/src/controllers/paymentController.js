@@ -139,4 +139,72 @@ const getOwnerPayments = async (req, res) => {
   }
 };
 
-export { createPayment ,getMyPayments, getOwnerPayments}
+
+const updatePaymentStatus = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const { status, transactionId } = req.body;
+
+    const allowedStatuses = ["pending", "paid", "failed"];
+
+    // 1. Validate status
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment status",
+      });
+    }
+
+    // 2. Find payment
+    const payment = await Payment.findById(paymentId);
+
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: "Payment not found",
+      });
+    }
+
+    // 3. Only payment owner can update it
+    if (payment.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this payment",
+      });
+    }
+
+    // 4. Update status
+    payment.status = status;
+
+    // 5. Transaction ID if provided
+    if (transactionId !== undefined) {
+      payment.transactionId = transactionId;
+    }
+
+    // 6. Set payment date when paid
+    if (status === "paid") {
+      payment.paymentDate = new Date();
+    }
+
+    // 7. Clear payment date if not paid
+    if (status !== "paid") {
+      payment.paymentDate = null;
+    }
+
+    await payment.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Payment status updated successfully",
+      payment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update payment status",
+      error: error.message,
+    });
+  }
+};
+
+export { createPayment ,getMyPayments, getOwnerPayments, updatePaymentStatus}
