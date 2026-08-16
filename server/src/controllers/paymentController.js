@@ -85,4 +85,31 @@ const createPayment = async (req, res) => {
   }
 };
 
-export { createPayment }
+const getMyPayments = async (req, res) => {
+  try {
+    const tenantId = req.user._id;
+
+    const payments = await Payment.find({
+      tenant: tenantId,
+    })
+      .populate("property", "title rent city images")
+      .populate("owner", "name email phone")
+      .populate("lease", "startDate endDate rent status")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Payments fetched successfully",
+      count: payments.length,
+      payments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch payments",
+      error: error.message,
+    });
+  }
+};
+
+export { createPayment ,getMyPayments}

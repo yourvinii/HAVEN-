@@ -31,6 +31,6 @@ app.use("/api/wishlist", wishlistRouter);
 app.use("/api/inquires", inquireRouter);
 app.use("/api/applications", applicationRouter);
 app.use("/api/leases", leaseRouter);
-app.use("api/payments", paymentRouter)
+app.use("/api/payments", paymentRouter)
 
 export default app;
