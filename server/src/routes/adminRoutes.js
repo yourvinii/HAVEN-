@@ -1,7 +1,10 @@
 import express from "express";
 import protect from "../middlewares/authMiddleware.js";
 import authorizeRoles from "../middlewares/roleMiddleware.js";
-import { getAllUsers } from "../controllers/adminController.js";
+import {
+  getAllProperties,
+  getAllUsers,
+} from "../controllers/adminController.js";
 
 const adminRouter = express.Router();
 
@@ -14,5 +17,9 @@ adminRouter.get("/dashboard", protect, authorizeRoles("admin"), (req, res) => {
 });
 
 adminRouter.route("/users").get(protect, authorizeRoles("admin"), getAllUsers);
+
+adminRouter
+  .route("/properties")
+  .get(protect, authorizeRoles("admin"), getAllProperties);
 
 export default adminRouter;
