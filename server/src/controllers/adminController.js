@@ -72,4 +72,4 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-export { getAllUsers, getAllProperties, deleteProperty };
+export { getAllUsers, getAllProperties, deleteProperty }
