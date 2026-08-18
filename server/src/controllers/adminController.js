@@ -72,4 +72,42 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-export { getAllUsers, getAllProperties, deleteProperty }
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // 1. Find user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 2. Prevent admin from deleting himself
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot delete your own account",
+      });
+    }
+
+    // 3. Delete user
+    await User.findByIdAndDelete(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete user",
+      error: error.message,
+    });
+  }
+};
+
+export { getAllUsers, getAllProperties, deleteProperty, deleteUser };

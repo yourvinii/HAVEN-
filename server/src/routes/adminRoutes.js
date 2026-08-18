@@ -3,6 +3,7 @@ import protect from "../middlewares/authMiddleware.js";
 import authorizeRoles from "../middlewares/roleMiddleware.js";
 import {
   deleteProperty,
+  deleteUser,
   getAllProperties,
   getAllUsers,
 } from "../controllers/adminController.js";
@@ -18,6 +19,11 @@ adminRouter.get("/dashboard", protect, authorizeRoles("admin"), (req, res) => {
 });
 
 adminRouter.route("/users").get(protect, authorizeRoles("admin"), getAllUsers);
+
+adminRouter
+  .route("/users/:userId")
+  .delete(protect, authorizeRoles("admin"), deleteUser);
+
 
 adminRouter
   .route("/properties")
