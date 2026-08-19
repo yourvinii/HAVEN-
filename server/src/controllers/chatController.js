@@ -3,6 +3,9 @@ import User from "../models/UserModel.js";
 
 const createOrGetChat = async (req, res) => {
   try {
+    console.log("REQ.USER:", req.user);
+    console.log("REQ.BODY:", req.body);
+
     const currentUserId = req.user._id;
     const { userId } = req.body;
 
@@ -47,7 +50,7 @@ const createOrGetChat = async (req, res) => {
 
       chat = await Chat.findById(chat._id).populate(
         "participants",
-        "name email role"
+        "name email role",
       );
     }
 

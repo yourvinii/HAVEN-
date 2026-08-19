@@ -12,6 +12,7 @@ import inquireRouter from "./routes/inquiryRoutes.js";
 import applicationRouter from "./routes/applicationRoutes.js";
 import leaseRouter from "./routes/leaseRoutes.js";
 import paymentRouter from "./routes/paymentRoutes.js";
+import chatRouter from "./routes/chatRoutes.js";
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +32,7 @@ app.use("/api/wishlist", wishlistRouter);
 app.use("/api/inquires", inquireRouter);
 app.use("/api/applications", applicationRouter);
 app.use("/api/leases", leaseRouter);
-app.use("/api/payments", paymentRouter)
+app.use("/api/payments", paymentRouter);
+app.use("/api/chats", chatRouter);
 
 export default app;
