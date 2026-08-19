@@ -68,4 +68,29 @@ const createOrGetChat = async (req, res) => {
   }
 };
 
-export { createOrGetChat };
+const getMyChats = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const chats = await Chat.find({
+      participants: userId,
+    })
+      .populate("participants", "name email role")
+      .sort({ updatedAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Chats fetched successfully",
+      count: chats.length,
+      chats,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch chats",
+      error: error.message,
+    });
+  }
+};
+
+export { createOrGetChat, getMyChats };
