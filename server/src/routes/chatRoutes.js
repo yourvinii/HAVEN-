@@ -14,7 +14,7 @@ chatRouter.route("/my").get(protect, getMyChats);
 
 chatRouter.route("/:chatId/messages").get(protect, getChatMessages);
 
-chatRouter.route("/:chatId/messages/read").patch(protect, markMessagesAsRead);
+chatRouter.route("/:chatId/messages/read").patch(protect, markMessagesAsRead)
 
 chatRouter.route("/").post(protect, createOrGetChat);
 
