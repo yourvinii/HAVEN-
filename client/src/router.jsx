@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import About from "./pages/About";
 import MainLayout from "./layouts/MainLayout";
+import SocketTest from "./SocketTest";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+      },
+      {
+        path: "socket-test",
+        element: <SocketTest />,
       },
     ],
   },
