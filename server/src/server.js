@@ -17,12 +17,16 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
+  socket.on("joinChat", (chatId) => {
+    socket.join(chatId);
+
+    console.log(`Socket ${socket.id} joined chat: ${chatId}`);
+  });
+
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
   });
 });
-
-
 
 const startServer = async () => {
   try {
