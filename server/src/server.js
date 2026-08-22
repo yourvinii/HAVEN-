@@ -1,15 +1,33 @@
 import http from "http";
+import { Server } from "socket.io";
 
 import app from "./app.js";
 import connectDB from "./config/db.js";
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+// socket.io connection
+
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected:", socket.id);
+  });
+});
+
 
 
 const startServer = async () => {
   try {
     await connectDB();
-    const server = http.createServer(app);
 
-    
     server.listen(8080, () => {
       console.log("Server is running on http://localhost:8080");
     });
