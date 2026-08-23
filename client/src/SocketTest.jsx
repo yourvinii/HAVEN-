@@ -10,11 +10,22 @@ const SocketTest = () => {
       console.log("Socket Connected:", socket.id);
     });
 
+    const chatId = "YOUR_CHAT_ID";
+
+    socket.emit("joinChat", chatId);
+
+    console.log("Joined chat:", chatId);
+
+    socket.on("newMessage", (data) => {
+      console.log("New message received:", data);
+    });
+
     socket.on("disconnect", () => {
       console.log("Socket disconnected");
     });
     return () => {
       socket.off("connect");
+      socket.off("newMessage");
       socket.off("disconnect");
       socket.disconnect();
     };
