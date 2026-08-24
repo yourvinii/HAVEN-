@@ -23,14 +23,14 @@ io.on("connection", (socket) => {
     console.log(`Socket ${socket.id} joined chat: ${chatId}`);
   });
 
-  socket.on("sendMessage", (data) => {
-    const { chatId, message } = data;
+  // socket.on("sendMessage", (data) => {
+  //   const { chatId, message } = data;
 
-    socket.to(chatId).emit("newMessage", {
-      chatId,
-      message,
-    });
-  });
+  //   socket.to(chatId).emit("newMessage", {
+  //     chatId,
+  //     message,
+  //   });
+  // });
 
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
