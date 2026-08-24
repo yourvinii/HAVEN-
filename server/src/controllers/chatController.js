@@ -1,6 +1,7 @@
 import Chat from "../models/ChatModel.js";
 import User from "../models/UserModel.js";
 import Message from "../models/MessageModel.js";
+import { io } from "../server.js";
 
 const createOrGetChat = async (req, res) => {
   try {
@@ -161,6 +162,11 @@ const sendMessage = async (req, res) => {
     const populatedMessage = await Message.findById(newMessage._id)
       .populate("sender", "name email role")
       .populate("receiver", "name email role");
+
+    io.to(chatId).emit("newMessage", {
+      chatId,
+      message: populatedMessage,
+    });
 
     return res.status(201).json({
       success: true,
