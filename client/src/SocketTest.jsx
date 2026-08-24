@@ -10,11 +10,16 @@ const SocketTest = () => {
       console.log("Socket Connected:", socket.id);
     });
 
-    const chatId = "YOUR_CHAT_ID";
+    const chatId = "6a85e377bd849485c9f5b9bb";
 
     socket.emit("joinChat", chatId);
 
     console.log("Joined chat:", chatId);
+
+    socket.emit("sendMessage", {
+      chatId,
+      message: "Hello from Socket.IO",
+    });
 
     socket.on("newMessage", (data) => {
       console.log("New message received:", data);
