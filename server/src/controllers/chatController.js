@@ -166,6 +166,7 @@ const sendMessage = async (req, res) => {
     io.to(chatId).emit("newMessage", {
       chatId,
       message: populatedMessage,
+      
     });
 
   
