@@ -81,11 +81,26 @@ const getMyChats = async (req, res) => {
       .populate("participants", "name email role")
       .sort({ updatedAt: -1 });
 
+    const chatsWithUnreadCount = await Promise.all(
+      chats.map(async (chat) => {
+        const unreadCount = await Message.countDocuments({
+          chat: chat._id,
+          receiver: userId,
+          isRead: false,
+        });
+
+        return {
+          ...chat.toObject(),
+          unreadCount,
+        };
+      }),
+    );
+
     return res.status(200).json({
       success: true,
       message: "Chats fetched successfully",
-      count: chats.length,
-      chats,
+      count: chatsWithUnreadCount.length,
+      chats: chatsWithUnreadCount,
     });
   } catch (error) {
     return res.status(500).json({
@@ -175,7 +190,7 @@ const sendMessage = async (req, res) => {
       chatId,
       message: populatedMessage,
     });
-    
+
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
