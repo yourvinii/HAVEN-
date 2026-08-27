@@ -182,18 +182,88 @@ const sendMessage = async (req, res) => {
   }
 };
 
+// const getChatMessages = async (req, res) => {
+//   try {
+//     const { chatId } = req.params;
+//     const userId = req.user._id;
+
+//     // Pagination
+//     const page = Math.max(Number(req.query.page) || 1, 1);
+//     const limit = Math.min(Number(req.query.limit) || 20, 100);
+
+//     const skip = (path - 1) * limit;
+
+//     // 1. Find chat
+//     const chat = await Chat.findById(chatId);
+
+//     if (!chat) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Chat not found",
+//       });
+//     }
+
+//     // 2. Check participant
+//     const isParticipant = chat.participants.some(
+//       (participant) => participant.toString() === userId.toString(),
+//     );
+
+//     if (!isParticipant) {
+//       return res.status(403).json({
+//         success: false,
+//         message: "You are not a participant in this chat",
+//       });
+//     }
+
+//     //  Total messages
+//     const totalMessages = await Message.countDocuments({
+//       chat: chatId,
+//     });
+
+//     // 3. Fetch messages
+//     const messages = await Message.find({
+//       chat: chatId,
+//     })
+//       .populate("sender", "name email role")
+//       .populate("receiver", "name email role")
+//       .sort({ createdAt: 1 })
+//       .skip(skip)
+//       .limit(limit);
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "Messages fetched successfully",
+//       count: messages.length,
+//       pagination: {
+//         page,
+//         limit,
+//         totalMessages,
+//         totalPages: Math.ceil(totalMessages / limit),
+//         hasNextPage: page < Math.ceil(totalMessages / limit),
+//       },
+//       messages: messages.reverse(),
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch messages",
+//       error: error.message,
+//     });
+//   }
+// };
+
 const getChatMessages = async (req, res) => {
   try {
     const { chatId } = req.params;
     const userId = req.user._id;
 
-    // Pagination
+    // 1. Pagination
     const page = Math.max(Number(req.query.page) || 1, 1);
     const limit = Math.min(Number(req.query.limit) || 20, 100);
 
-    const skip = (path - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    // 1. Find chat
+    // 2. Find chat
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
@@ -203,9 +273,9 @@ const getChatMessages = async (req, res) => {
       });
     }
 
-    // 2. Check participant
+    // 3. Check participant
     const isParticipant = chat.participants.some(
-      (participant) => participant.toString() === userId.toString(),
+      (participant) => participant.toString() === userId.toString()
     );
 
     if (!isParticipant) {
@@ -215,18 +285,18 @@ const getChatMessages = async (req, res) => {
       });
     }
 
-    //  Total messages
+    // 4. Total messages
     const totalMessages = await Message.countDocuments({
       chat: chatId,
     });
 
-    // 3. Fetch messages
+    // 5. Fetch messages
     const messages = await Message.find({
       chat: chatId,
     })
       .populate("sender", "name email role")
       .populate("receiver", "name email role")
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
