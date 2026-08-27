@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 
 import app from "./app.js";
 import connectDB from "./config/db.js";
+import { initSocket } from "./config/socket.js";
 
 const server = http.createServer(app);
 
@@ -12,6 +13,7 @@ const io = new Server(server, {
   },
 });
 
+initSocket(io);
 // socket.io connection
 
 io.on("connection", (socket) => {
