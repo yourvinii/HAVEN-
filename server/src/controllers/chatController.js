@@ -166,12 +166,8 @@ const sendMessage = async (req, res) => {
     io.to(chatId).emit("newMessage", {
       chatId,
       message: populatedMessage,
-      
     });
 
-  
-
-    
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
@@ -190,6 +186,12 @@ const getChatMessages = async (req, res) => {
   try {
     const { chatId } = req.params;
     const userId = req.user._id;
+
+    // Pagination
+    const page = Math.max(Number(req.query.page) || 1, 1);
+    const limit = Math.min(Number(req.query.limit) || 20, 100);
+
+    const skip = (path - 1) * limit;
 
     // 1. Find chat
     const chat = await Chat.findById(chatId);
@@ -213,19 +215,33 @@ const getChatMessages = async (req, res) => {
       });
     }
 
+    //  Total messages
+    const totalMessages = await Message.countDocuments({
+      chat: chatId,
+    });
+
     // 3. Fetch messages
     const messages = await Message.find({
       chat: chatId,
     })
       .populate("sender", "name email role")
       .populate("receiver", "name email role")
-      .sort({ createdAt: 1 });
+      .sort({ createdAt: 1 })
+      .skip(skip)
+      .limit(limit);
 
     return res.status(200).json({
       success: true,
       message: "Messages fetched successfully",
       count: messages.length,
-      messages,
+      pagination: {
+        page,
+        limit,
+        totalMessages,
+        totalPages: Math.ceil(totalMessages / limit),
+        hasNextPage: page < Math.ceil(totalMessages / limit),
+      },
+      messages: messages.reverse(),
     });
   } catch (error) {
     return res.status(500).json({
