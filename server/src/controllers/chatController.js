@@ -1,7 +1,8 @@
 import Chat from "../models/ChatModel.js";
 import User from "../models/UserModel.js";
 import Message from "../models/MessageModel.js";
-import { io } from "../server.js";
+import { getIO } from "../config/socket.js";
+// import { io } from "../server.js";
 
 const createOrGetChat = async (req, res) => {
   try {
@@ -163,11 +164,18 @@ const sendMessage = async (req, res) => {
       .populate("sender", "name email role")
       .populate("receiver", "name email role");
 
+    // io.to(chatId).emit("newMessage", {
+    //   chatId,
+    //   message: populatedMessage,
+    // });
+
+    const io = getIO();
+
     io.to(chatId).emit("newMessage", {
       chatId,
       message: populatedMessage,
     });
-
+    
     return res.status(201).json({
       success: true,
       message: "Message sent successfully",
@@ -275,7 +283,7 @@ const getChatMessages = async (req, res) => {
 
     // 3. Check participant
     const isParticipant = chat.participants.some(
-      (participant) => participant.toString() === userId.toString()
+      (participant) => participant.toString() === userId.toString(),
     );
 
     if (!isParticipant) {
