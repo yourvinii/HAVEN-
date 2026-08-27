@@ -5,6 +5,7 @@ import SignUp from "./pages/SignUp";
 import About from "./pages/About";
 import MainLayout from "./layouts/MainLayout";
 import SocketTest from "./SocketTest";
+import Properties from "./pages/Properties";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "socket-test",
         element: <SocketTest />,
+      },
+      {
+        path: "properties",
+        element: <Properties />,
       },
     ],
   },
