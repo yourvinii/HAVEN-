@@ -34,6 +34,41 @@ const Home = () => {
               Get Started
             </Link>
           </div>
+          
+<div className="mt-10 rounded-2xl border bg-white p-4 shadow-sm">
+  <div className="grid gap-4 md:grid-cols-4">
+    <input
+      type="text"
+      placeholder="Search by city"
+      className="rounded-lg border px-4 py-3 outline-none focus:ring-2 focus:ring-gray-300"
+    />
+
+    <select className="rounded-lg border px-4 py-3 outline-none focus:ring-2 focus:ring-gray-300">
+      <option value="">Property Type</option>
+      <option value="room">Room</option>
+      <option value="flat">Flat</option>
+      <option value="house">House</option>
+      <option value="pg">PG</option>
+      <option value="hostel">Hostel</option>
+      <option value="shop">Shop</option>
+    </select>
+
+    <input
+      type="number"
+      placeholder="Max rent"
+      className="rounded-lg border px-4 py-3 outline-none focus:ring-2 focus:ring-gray-300"
+    />
+
+    <button
+      type="button"
+      className="rounded-lg bg-black px-6 py-3 font-medium text-white hover:bg-gray-800"
+    >
+      Search
+    </button>
+  </div>
+</div>
+
+
         </div>
       </div>
     </section>
