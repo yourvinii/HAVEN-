@@ -1,12 +1,7 @@
-import React from "react";
+import AppRoutes from "./routes/AppRoutes";
 
-const App = () => {
-  return (
-    <div className="min-h-screen flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold ">KDRent</h1>
-      <p>Rental Property Management</p>
-    </div>
-  );
-};
+function App() {
+  return <AppRoutes />;
+}
 
 export default App;
