@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { loginUser } from "../api/authApi";
-import { setAuthData } from "../utils/storage";
+import { useAuth } from "../context/AuthContext";
 function Login() {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,11 +25,11 @@ function Login() {
     setLoading(true);
 
     try {
-      const data = await loginUser(formData);
+const data = await loginUser(formData);
 
-      console.log("Login Response:", data);
+console.log("Login Response:", data);
 
-      setAuthData(data.token, data.user);
+login(data.token, data.user);
     } catch (error) {
       console.error("Login Error:", error);
 
