@@ -1,15 +1,32 @@
 import { createContext, useContext, useState } from "react";
+import {
+  setAuthData,
+  getToken,
+  getUser,
+  clearAuthData,
+} from "../utils/storage";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const token = getToken();
+    const savedUser = getUser();
 
-  const login = (userData) => {
+    if (token && savedUser) {
+      return savedUser;
+    }
+
+    return null;
+  });
+
+  const login = (token, userData) => {
+    setAuthData(token, userData);
     setUser(userData);
   };
 
   const logout = () => {
+    clearAuthData();
     setUser(null);
   };
 
@@ -19,6 +36,7 @@ export function AuthProvider({ children }) {
         user,
         login,
         logout,
+        isAuthenticated: !!user,
       }}
     >
       {children}
