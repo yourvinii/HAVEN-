@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "../api/authApi";
-
+import { setAuthData } from "../utils/storage";
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -27,11 +27,13 @@ function Login() {
       const data = await loginUser(formData);
 
       console.log("Login Response:", data);
+
+      setAuthData(data.token, data.user);
     } catch (error) {
       console.error("Login Error:", error);
 
       setError(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || "Login failed. Please try again.",
       );
     } finally {
       setLoading(false);
