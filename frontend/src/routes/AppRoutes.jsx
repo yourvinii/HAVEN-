@@ -2,11 +2,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import Home from "../pages/Home";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <h1>KDRent Home</h1>,
+    element: <Home />,
   },
   {
     path: "/login",
