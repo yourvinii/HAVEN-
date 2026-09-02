@@ -1,6 +1,9 @@
+import Navbar from "../components/Navbar";
+
 function Home() {
   return (
     <div className="min-h-screen">
+      <Navbar />
       <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
         <h1 className="text-5xl font-bold text-gray-900">
           Find Your Perfect Rental Home
