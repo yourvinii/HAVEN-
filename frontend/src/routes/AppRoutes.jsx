@@ -3,6 +3,8 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
+import Properties from "../pages/Properties";
+
 
 const router = createBrowserRouter([
   {
@@ -12,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/properties",
+    element: <Properties />,
   },
   {
     element: <ProtectedRoute />,
