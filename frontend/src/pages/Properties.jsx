@@ -1,6 +1,35 @@
 import Navbar from "../components/Navbar";
+import { useEffect, useState } from "react";
+import { getAllProperties } from "../api/propertyApi";
+
 
 function Properties() {
+   const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const data = await getAllProperties();
+
+        console.log("Properties Response:", data);
+
+        setProperties(data);
+      } catch (error) {
+        console.error("Properties Error:", error);
+
+        setError(
+          error.response?.data?.message ||
+            "Failed to load properties."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
