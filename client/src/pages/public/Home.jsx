@@ -121,6 +121,69 @@ function Home() {
 
   </div>
 </section>
+
+<section className="bg-gray-50">
+  <div className="mx-auto max-w-7xl px-6 py-20">
+
+    <div className="mx-auto max-w-2xl text-center">
+      <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+        Why KDRent
+      </p>
+
+      <h2 className="mt-2 text-3xl font-bold text-gray-900">
+        Renting made simpler
+      </h2>
+
+      <p className="mt-4 text-gray-600">
+        We make it easier for tenants and property owners to
+        connect and manage rentals in one place.
+      </p>
+    </div>
+
+    <div className="mt-12 grid gap-6 md:grid-cols-3">
+
+      <div className="rounded-2xl bg-white p-8 shadow-sm">
+        <div className="text-3xl">🔎</div>
+
+        <h3 className="mt-5 text-xl font-semibold text-gray-900">
+          Easy Property Search
+        </h3>
+
+        <p className="mt-3 leading-7 text-gray-600">
+          Find rental properties based on your location,
+          budget, and preferred property type.
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-8 shadow-sm">
+        <div className="text-3xl">🏠</div>
+
+        <h3 className="mt-5 text-xl font-semibold text-gray-900">
+          Local Properties
+        </h3>
+
+        <p className="mt-3 leading-7 text-gray-600">
+          Discover rental properties from your local area
+          without the hassle of searching everywhere.
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white p-8 shadow-sm">
+        <div className="text-3xl">🤝</div>
+
+        <h3 className="mt-5 text-xl font-semibold text-gray-900">
+          Direct Connection
+        </h3>
+
+        <p className="mt-3 leading-7 text-gray-600">
+          Connect with property owners and communicate
+          about the property directly.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
      </>
     
   );
