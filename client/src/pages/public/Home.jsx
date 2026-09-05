@@ -239,6 +239,25 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <section className="bg-gray-900">
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold text-white md:text-4xl">
+              Ready to find your next home?
+            </h2>
+
+            <p className="mt-5 text-lg leading-8 text-gray-300">
+              Explore rental properties in your area and find a place that feels
+              right for you.
+            </p>
+
+            <button className="mt-8 rounded-lg bg-white px-6 py-3 font-semibold text-gray-900 transition hover:bg-gray-100">
+              Browse Properties
+            </button>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
